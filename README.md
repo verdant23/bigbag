@@ -15,23 +15,23 @@
 * You can run it from a USB drive, remotely or on your PC like any other program.
 * EPKL can map key presses like the installed Windows layout does.
 * You can use it to change single keys, or remap the entire layout.
-* It also supports special keys and functions; read on for more info.
+* It also supports special keys and functions. Read on for more info.
 <br>
 
-* EPKL implements my [**Big Bag Of Tricks**][orgBBT] for Windows!
+* EPKL implements my [**Big Bag of Keyboard Tricks**][orgBBT] for Windows!
     - That is, my many layout mods and tweaks and bells and whistles. 
 * It's mostly centered around the brilliant Colemak keyboard layout,…
 * … with or without my own `[eD]` AltGr layers and dead keys,…
 * … **ergonomic mods** both for **Colemak**, the **Tarmak** learning layouts and **other layouts**,…
 * … and the incredibly useful [**Extend**][BBText] layers which work with any layout.
-* **DreymaR's Big Bag of Keyboard Trickery** at [**dreymar.colemak.org**][orgBBT] is my main info site.
+* **DreymaR's Big Bag of Keyboard Tricks** at [**dreymar.colemak.org**][orgBBT] is my main info site.
     - On those pages, you can choose the Windows (flag icon) platform to see more about EPKL/Windows.
     - <del>In the [old Forum BigBag][CmkBBT] there's a specific [topic for EPKL/Windows][CmkPKL] too. It's old though.</del>
 <br>
 
 * EPKL has lots of improvements over the old abandonware PKL by Máté Farkas (2008–2010).
 * Nearly all my Big Bag "tricks" are implemented for EPKL, as layouts and accessory files.
-* Some non-EPKL BigBag stuff can be found in the Other folder, such as other keyboard tools.
+* Some non-EPKL BigBag/Windows stuff can be found in the Other folder, such as other keyboard tools.
 * Some non-BigBag stuff is found in EPKL too, including support for several other layouts.
     - I won't support just any other layout though, as I don't have time and energy to do so.
     - The layouts I have included for EPKL have all seemed interesting and/or promising to me.
@@ -48,7 +48,7 @@ Getting EPKL up and running
     - For releases, the `EPKL.exe` binary is included. For commits, you must run `Compile_EPKL.bat` to produce it.
     - Note that some virus protection programs overreact to compiling Autohotkey (AHK) code of this type.
 * **FAST LANE:** If you simply want "vanilla Colemak" on a US/ANSI keyboard, just run EPKL.exe and type!
-    - If you insist on having the Caps key as Backspace instead of the superior and wonderful Extend key…
+    - If you insist on having the Caps key as Backspace instead of the superior Extend key…
     - … in the [Layouts Default file][LayDef] find the first `;QWCLK = BACK` etc line and remove that semicolon…
     - … but please read the ["Can I map…"](https://github.com/DreymaR/BigBagKbdTrixPKL#can-i-map-the-caps-key-to-backspace) section below first to know your options!
 * Run EPKL.exe inside its main folder in any way you like! Check its tray menu in the bottom right-hand corner.
@@ -119,14 +119,14 @@ The Settings dialog holds some useful info points for each tab, and the KeyMappe
     - The DH mod in itself is named `Curl` in EPKL, because that's what it does physically: The home row is curled like the curve of your fingers.
     - For standard row-staggered keyboards (whether ANSI or ISO), the `CurlAngle` mod equals the Colemak-DH layout.
     - The `Curl`-only mod is for ortho keyboards.
-    - Many newbs on row-stag boards don't understand why an [**Angle mod**][BBTawi] is needed. Please strive to do so! Please! Please!!!
+    - Many newbs on row-stag boards don't understand why an [**Angle mod**][BBTawi] is needed. Please strive to do so!!!
 <br>
 
 #### What are the options?
 - You'll notice that you can also select `Wide` and `Sym` ergo mods in most cases, up to a cool `CAWS` combo. Consult the [Big Bag][orgBBT].
     - All combos aren't pre-made as that'd be too much work for me. To create new ones yourself, see below.
 - The next image shows Colemak-DH on an ANSI keyboard, together with the Symbol mod which affects the right-hand symbol keys.
-    - In EPKL terms that's Colemak-eD_ANS_CurlAngleSym which may be abbreviated to Cmk-CAS in writing.
+    - In EPKL terms that's Colemak-eD_ANS_CurlAngleSym which may be abbreviated to Cmk-CAS.
     - Note the Angle(Z) mod that moves the XCDV keys one step to the left so your left wrist can be straight like on the right hand.
     - Every finger in the image has its own color, so make sure you do the Angle mod right!
 <br>
@@ -172,20 +172,26 @@ You may want to use EPKL's functionality without opting for one of the available
 - If you want an ergo mod for the Extend layer, you need to select/make the right mod combo in the EPKL Layouts\System layout file.
 <br><br>
 
-Key Mapping vs State Mapping
-----------------------------
+Key vs State Mapping
+--------------------
 There are two main ways EPKL handles key presses intercepted by its keyboard hook:
 * **Key mapping** means that EPKL sends a new keypress event to the OS. It may be the same key or a different one.
     - The types of key mapping available are by Scan Code (**SC**) or by Virtual Key (**VK**) code.
     - These generally work the same. Windows translates between them as necessary.
     - There's a set of intuitive KLM key code aliases. For instance, the VK code for the <kbd>Del</kbd> key is `vcDEL`.
-    - The "System" mapping is shorthand for simply SC mapping the key onto itself, allowing EPKL to see that key.
-    - The "Modifier" mapping is a special case. It's used for modifiers including Shift, Ctrl and Extend.
+    - The `Modifier` mapping is a special case. It's used for modifiers including Shift, Ctrl and Extend.
+    - The mapping format for key mapping is `<KEY SC> = <VK CODE> VKey` (or `<SC> SKey`).
+* **Single-Entry mapping** can be handy for some special use cases.
+    - A `System` (or `SKey`) entry simply SC maps the key onto itself, allowing EPKL to see that key.
+    - A `Disabled` (or `--`) single-entry mapping does just that: Renders a key disabled and useless.
+    - A `Unmapped` (or `<>`) entry can be used by an override file to tell EPKL to leave that key alone.
+    - The mapping format for these commands is simply `<KEY SC> = <SINGLE ENTRY>`.
 * **State mapping** means that EPKL sends a character event onwards to the OS based on the current shift state.
     - The shift state is affected by Shift (held or on a Sticky Mod timer), AltGr and other layer modifiers.
     - In addition to single characters, the mapping can be all sorts of wondrous things. See below for info.
     - The **eD** layout type is state mapped using my AltGr and dead key [Colemak-eD][BBT_eD] layers.
     - Including the custom SwiSh and FliCK modifiers, there are a lot of states available in EPKL.
+    - The mapping format for state mapped keys is described in the [State Mapping Syntax](#state-mapping-syntax) section below.
 * Any key may be key or state mapped. Layouts will generally contain one or the other type, but may contain a mix.
     - Wherever there is an eD-type layout available, you can use it as a key mapped one with the **eD2VK** type.
     - The eD2VK layout type will read its BaseLayout only as key mapped. Any overriding mappings are read as-is.
@@ -214,17 +220,9 @@ In gaming a key is often held down for a longish time. This may lead to some pro
 * For key-intensive games like FPS, probably (auto-)suspend EPKL
 <br><br>
 
-Making Layout Variants
-----------------------
-It's entirely possible to create new layout variants and tweak existing ones with EPKL. It can be a little daunting at first though!
-Mostly because there is so much functionality and complexity, which is actually a good thing but hard on the beginner.
-
-To learn more about key mappings and creating your own layout variants, please consult the [Layouts folder][PklLay] README.
-<br><br>
-
-Key Mapping Syntax
-------------------
-As seen above, there are two basic types of mapping: Key and state. 
+State Mapping Syntax
+--------------------
+As seen in the [Key vs State Mapping](#key-vs-state-mapping) section above, there are two basic types of mapping: Key and shift/modifier state.
 The format for EPKL state mapping is similar to [MSKLC][PklKLC], but more readable and also a lot more powerful.
 
 ```
@@ -245,6 +243,7 @@ This shows the start of the layout section of an EPKL `Layout.ini` file. So, wha
 * **CStat**: The **Caps stat** for this key
 	- CStat is a number used by MSKLC to determine CapsLock behavior. It's the AND value of the states that are shifted with Caps.
 	- Example: If a key has letter and its capitalized counterpart on states 0/1, CStat is 1. If also on 6/7, it's 5 (4 + 1; see below).
+	- In most cases, though, this number isn't so important. If you're not sure, feel free to just ignore it.
 	- If a key is key mapped, this entry is the final one for that key and instead consists of the string `VKey` or `SKey`, or a synonym.
 * **State 0/1**: **Base** and **shifted** output
 	- While MSKLC has Unicode hex values for these entries, EPKL can take just a symbol – or any other valid entry like Prefix-Entry syntax!
@@ -262,6 +261,15 @@ This shows the start of the layout section of an EPKL `Layout.ini` file. So, wha
 	- You need to have keys defined as SwiSh and/or FliCK modifiers to access those states, should you want to.
 	- The SwiSh (Swiss Shift) modifier adds 8 to the state, and FliCK (Flip Cap Key) adds 16 (not shown above).
 	- In the Colemak `BaseLayout_Cmk-eD_SwiSh.ini` file, I defined a suggestion of how to get accented letters etc using SwiSh & FliCK.
+<br><br>
+
+Making Layout Variants
+----------------------
+It's entirely possible to create new layout variants and tweak existing ones with EPKL. It can be a little daunting at first though!
+Mostly because there is so much functionality and complexity, which is actually a good thing but hard on the beginner.
+
+To learn more about key mappings and creating your own layout variants, please consult the [Layouts folder][PklLay] README.
+<br><br>
 
 More Know-How
 -------------
@@ -377,8 +385,7 @@ The layouts and setup files may take a little tweaking to get what you want. The
 * EPKL allows end-of-line comments (whitespace-semicolon) in .ini files. The old PKL only allowed them in layout entries.
 * You can use EPKL with a Virtual Machine. Set it to not capture the keyboard. System key strokes may not transfer then.
     - If you have a VM running Windows, another way is to run EPKL inside the VM of course.
-* Running EPKL with other (AutoHotkey) key mapping scripts may get confusing if there is so-called _hook competition_.
-    - When this happens, it becomes uncertain which hook gets which key press, with unpredictable results.
+* Running EPKL with other key mapping programs may be problematic due to _hook competition_. For more info, see [Known Issues](#known-issues) below.
 * EPKL isn't always a robust solution for gaming etc. See the [Other folder][PklOth] for more options/info.
 <br>
 
@@ -388,22 +395,22 @@ The layouts and setup files may take a little tweaking to get what you want. The
 * Should you need to start a literal string with one of the prefix characters, prefix it with `→` or `%`.
 * This is from the EPKL `Layout/Settings…` Key Mapper Help screen (press the Help button on the last tabs):
 ```
-;;  ====================================================================================================================
-;;  EPKL prefix-entry syntax is useable in layout state mappings, Extend, Compose, PowerString and dead key entries.
-;;  - There are two equivalent prefixes for each entry type: One easy-to-type ASCII, one from the eD Shift+AltGr layer.
-;;      →  |  %  : Send a literal string/ligature by the SendInput {Text} method
-;;      §  |  $  : Send a literal string/ligature by the SendMessage method
-;;      α  |  *  : Send ‹entry› as AHK syntax in which !+^# are modifiers, and {} contain key names
-;;      β  |  =  : Send {Blind}‹entry›, keeping the current modifier state
-;;      †  |  ~  : Send the hex Unicode point U+<entry> (normally but not necessarily 4-digit)
-;;      Ð  |  @  : Send the current layout's dead key named ‹entry› (often a 3-character code)
-;;      ¶  |  &  : Send the current layout's powerstring named ‹entry›; some are abbreviations like &Esc, &Tab…
-;;  - Any entry may start with «#»: '#' is one or more characters to display on help images for the following mapping.
-;;  - Other advanced state mappings:
-;;      ®® |  ®# : Repeat the previous character. `#` may be a hex number. Nice for avoiding same-finger bigrams.
-;;      ©‹name›  : Named Compose key, replacing the last written character sequence with something else.
-;;      ##       : Send the active system layout's Virtual Key code. Good for OS shortcuts, but EPKL can't see it.
-;;  ====================================================================================================================
+#=======================================================================================================================#
+|  EPKL prefix-entry syntax is useable in layout state mappings, Extend, Compose, PowerString and dead key entries.     |
+|  - There are two equivalent prefixes for each entry type: One easy-to-type ASCII, one from the eD Shift+AltGr layer.  |
+|      →  |  %  : Send a literal string/ligature by the SendInput {Text} method                                         |
+|      §  |  $  : Send a literal string/ligature by the SendMessage method                                              |
+|      α  |  *  : Send ‹entry› as AHK syntax in which !+^# are modifiers, and {} contain key names                      |
+|      β  |  =  : Send {Blind}‹entry›, keeping the current modifier state                                               |
+|      †  |  ~  : Send the hex Unicode point U+<entry> (normally but not necessarily 4-digit)                           |
+|      Ð  |  @  : Send the current layout's dead key named ‹entry› (often a 3-character code)                           |
+|      ¶  |  &  : Send the current layout's powerstring named ‹entry›; some are abbreviations like &Esc, &Tab…          |
+|  - Any entry may start with «#»: '#' is one or more characters to display on help images for the following mapping.   |
+|  - Other advanced state mappings:                                                                                     |
+|      ®® |  ®# : Repeat the previous character. `#` may be a hex number. Nice for avoiding same-finger bigrams.        |
+|      ©‹name›  : Named Compose key, replacing the last written character sequence with something else.                 |
+|      ##       : Send the active system layout's Virtual Key code. Good for OS shortcuts, but EPKL can't see it.       |
+#=======================================================================================================================#
 ```
 
 #### The LayStack and file relations explained further
@@ -510,8 +517,13 @@ You can set pretty much any key to be a modifier of choice.
 * Try [SharpKeys][ShrpKy] for hard mod remapping? It's less flexible but very robust!
 <br><br>
 
-KNOWN ISSUES:
--------------
+KNOWN ISSUES
+------------
+* Running EPKL with other key mapping programs may be problematic due to _hook competition_.
+    - When keyboard hooks compete, it becomes uncertain which hook gets which key press, with unpredictable results.
+    - Unfortunately, this includes some of the functionality of the popular [Microsoft PowerToys](https://apps.microsoft.com/detail/xp89dcgq3k6vld) tool suite.
+    - It also includes other AutoHotkey scripts using hotkeys.
+    - To some extent, you could include other scripts into EPKL if you know how to, or replicate their functionality within EPKL.
 * The AHK `Send` command used by some EPKL mappings, sends a `KeyDown` shortly followed by a `KeyUp`.
     - This does produce a key press with the desired character/key.
     - However, when holding down a key for a while Windows really sends repeated `KeyDown` events and `KeyUp` only on key release.
@@ -545,19 +557,21 @@ KNOWN ISSUES:
     - The workaround I use is to use its synonym `Ctrl+Shift+Backtick` (the \` character on the Tilde key).
 <br>
 
-DONE/TODO:
-----------
+DONE/TODO
+---------
 For more info about past and future EPKL history, see the **[EPKL Advanced README][PklSrc]** in the EPKL_Source folder.
 <br>
 
 Credits/sources
 ---------------
-#### ~ The original [PKL][PKLGit] written by [Máté Farkas in 2008][PKLSFo] using [AutoHotkey][PKLAHK]
-#### ~ [EPKL][EPKLgh], formerly [PKL[edition DreymaR]][CmkPKL] by DreymaR, 2017-
-#### ~ Big thanks to the AutoHotkey people, Vortex(vVv), the Colemak Forum crowd and all other contributors.
+* **The original [PKL][PKLGit] written by [Máté Farkas in 2008][PKLSFo] using [AutoHotkey][PKLAHK]**
+
+* **[EPKL][EPKLgh], formerly [PKL[edition DreymaR]][CmkPKL] by DreymaR, 2017-**
+
+* **Big thanks to the AutoHotkey people, Vortex(vVv), the Colemak Forum crowd and all other contributors**
 <br>
 
-_Finally, to all of you: Best of luck using EPKL!_
+_Finally, to all of you: Best of luck using EPKL!_<br>
 _Øystein "DreymaR" Bech-Aase_
 
 [PKLGit]: https://github.com/Portable-Keyboard-Layout/Portable-Keyboard-Layout/ (Old PKL on GitHub)

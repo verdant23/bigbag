@@ -1,4 +1,4 @@
-﻿;; ================================================================================================
+﻿;;  ============================================================================================================================================================
 ;;  EPKL Settings UI module
 ;;  - Handles the EPKL Layout/Settings... menu, consisting of several settings tabs
 ;;  - It writes your choices to the right EPKL Override files, generating these first as necessary.
@@ -40,6 +40,7 @@ init_Settings_UI() {    										; Initialize UI globals (run once by pkl_init;
 		if ( row > 0 )  										; Only show row 1-4 in the DDLs
 			ui.KLMs[ row ] := keyRow 	;StrSplit( keyRow, "|", " `t" ) 	; Split by pipe
 	}	; end For KLM codes
+	ui.SEnt := "System|VKey|Disabled|Unmapped|" 				; Single-Entry key mappings
 } 	; end init
 
 pklSetUI() { 													; EPKL Settings GUI
@@ -60,7 +61,7 @@ pklSetUI() { 													; EPKL Settings GUI
 	GUI, UI:Add, Tab3, vUI_Tab gUIhitTab +AltSubmit 			; Multi-tab GUI. AltSubmit gets tab # not name.
 			, % "Layout||Settings|Special Keys|Key Mapper"  	; The tab followed by double pipes is default
 	
-	;; ================================================================================================
+	;;  ============================================================================================================================================================
 	;;  Layout Picker UI
 	;
 	GUI, UI:Add, Text, section  								; 'section' stores the x value for later
@@ -107,7 +108,7 @@ pklSetUI() { 													; EPKL Settings GUI
 	GUI, UI:Add, Button, xs y%BL% vUI_Btn1  gUIsubLaySel, &Submit Layout Choice
 	GUI, UI:Add, Button, xs+244 yp          gUIrevLay   , %SP%&Reset%SP% 	; Note: Using absolute pos., specify both x & y
 	
-	;; ================================================================================================
+	;;  ============================================================================================================================================================
 	;;  General Settings UI
 	;
 	GUI, UI:Tab, 2
@@ -119,7 +120,7 @@ pklSetUI() { 													; EPKL Settings GUI
 			,       "SetThis"   , "Choose1 w160" , setThis  , "xs y+m" ) 		; Submits the entry itself
 	_uiAddEdt( "`nDefault value:"
 			,       "SetDefs"   , "Disabled"       , ui.WideTxt, "xs y+m" )
-	_uiAddEdt( "`nLine comments etc for this option:"
+	_uiAddEdt( "`nLine comments for this option:"
 			,       "SetComm"   , "Disabled"       , ui.WideTxt, "xs y+m" ) 	; "cGray" lets you select/view the whole line
 	_uiAddEdt( "`n`nSubmit this to the Settings_Override [pkl] section:"
 			,       "SetLine"   , ""            , ui.WideTxt, "xs y+m" )
@@ -130,17 +131,17 @@ pklSetUI() { 													; EPKL Settings GUI
 	GUI, UI:Add, Button, xs y%BL% vUI_Btn2  gUIsubSetSel, &Submit Setting%SP%
 	GUI, UI:Add, Button, xs+244 yp          gUIrevSet   , %SP%&Reset%SP%
 	
-	;; ================================================================================================
+	;;  ============================================================================================================================================================
 	;;  Special Keys UI
 	;
 	GUI, UI:Tab, 3
 	GUI, UI:Add, Text, section  								; 'section' stores the x value for later
 					, % "`nSpecial keys settings for " . pklAppName ;. " [WIP]"
 					.   "`n" . ui.SepLine 	; ————————————————————————————————————————————————
-	choices     :=  [ "CapsLock           	(waste.)"
-					, "Backspace         	(oki...)"
-					, "Extend key         	(wowza!)"
-					, "Back/Extend      	(fancy!)"
+	choices     :=  [ "CapsLock           	(Wasted)"
+					, "Backspace         	(Okay)  "
+					, "Extend key         	(Wowza!)"
+					, "Back/Extend      	(Fancy!)"
 					, "Mother-of-DK      	(POWAH!)"   ]
 	_uiAddSel(  "CapsLock key behavior, and the resultant mapping entry:"
 			,       "SpcExtS"   , "Choose3 w170 +AltSubmit" , choices   , "xs y+m" )
@@ -173,7 +174,7 @@ pklSetUI() { 													; EPKL Settings GUI
 	GUI, UI:Add, Button, xs+244 yp          gUIrevSpc   , %SP%&Reset%SP%
 	GUI, UI:Add, Button, xs+310 yp          gUIhlpShow  , %SP%&Help%SP%
 	
-	;; ================================================================================================
+	;;  ============================================================================================================================================================
 	;;  Key Mapper UI [advanced]
 	;
 	GUI, UI:Tab, 4
@@ -181,7 +182,7 @@ pklSetUI() { 													; EPKL Settings GUI
 					, % "`nKey mapping editor for " . pklAppName . " [advanced]"
 					.   "`n" . ui.SepLine 	; ————————————————————————————————————————————————
 	_uiAddSel(  "Mapping type: "
-			,       "KeyType"   , "Choose4 +AltSubmit", [ "VirtualKey", "State maps", "Modifier", "Tap-or-Mod", "MoDK" ], "xs y+m" )
+			,       "KeyType"   , "Choose4 +AltSubmit", [ "VirtualKey", "State maps", "Modifier", "Tap-or-Mod", "MoDK", "Single-Entry" ], "xs y+m" )
 	klmRows     := [ "Number", "Upper", "Home", "Lower" ]   	; Num,Upp,Hom,Low. Row 1-4 in the KLM.
 	GUI, UI:Add, Text,          , % "SC Row:"
 	GUI, UI:Add, Text, x+60     , % "Map from QW Scan code:"
@@ -190,7 +191,7 @@ pklSetUI() { 													; EPKL Settings GUI
 	_uiAddSel(  "" 	;"Scan code:"
 			,       "KeyCodS"   , "Choose1"     , [ "CLK" ], "x+30"    )
 	GUI, UI:Add, Text, xs y+m   , % "VK Row:"
-	GUI, UI:Add, Text, x+60     , % "Map to vc VirtualKey code:"
+	GUI, UI:Add, Text, x+60     , % "Map to ""VirtualKey"" (vc) code:"
 	_uiAddSel(  "" 	;"Row: "
 			,       "KeyRowV"   , "Choose1 w70 +AltSubmit" , klmRows  , "xs y+m"  ) 	; Submits row #
 	_uiAddSel(  "" 	;"VKey code:"
@@ -229,7 +230,7 @@ pklSetUI() { 													; EPKL Settings GUI
 	Gosub UIhitTab
 } 	; end fn pklSetUI
 
-	;; ================================================================================================
+	;;  ============================================================================================================================================================
 	;;  UI Control sections
 	;
 UIhitTab:   													; When a tab is selected, make its button the default.
@@ -312,7 +313,7 @@ _setValDefCom( setting ) {  									; Get value/default/commentaries for a Sett
 UIselSpc:   													; Handle UI Special Key selections
 	GUI, UI:Submit, Nohide
 	case    :=  UI_SpcExtS  									; eD TODO: The Switch command only appears with AHK v1.1.31+!
-	mapping :=  ( case == 1 ) ? "System" 					;"CAPITAL     VKey"  	; [ "Caps", "Back", "Ext", "Back/Ext", "MoDK" ]
+	mapping :=  ( case == 1 ) ? "Unmapped"  					;"CAPITAL     VKey"  	; [ "Caps", "Back", "Ext", "Back/Ext", "MoDK" ]
 			:   ( case == 2 ) ? "qwBSP       SKey"  		;"BACK        VKey"
 			:   ( case == 3 ) ? "Extend      Modifier"
 			:   ( case == 4 ) ? "BACK/Ext    VKey"
@@ -334,32 +335,44 @@ Return
 
 UIselKey:   													; Handle UI Key Mapping selections
 	GUI, UI:Submit, Nohide
+	case    :=  UI_KeyType  									; eD TODO: The Switch command only appears with AHK v1.1.31+!
 	_uiControl( "KeyCodS", "|" . ui.KLMs[ UI_KeyRowS ]  )
-	_uiControl( "KeyCodV", "|" . ui.KLMs[ UI_KeyRowV ]  )
+	keyCodV := ( case == 6 ) ? ui.SEnt : ui.KLMs[ UI_KeyRowV ] 	; Single-Entry or vc-containing mapping
+	_uiControl( "KeyCodV", "|" .             keyCodV    )
 	_uiControl( "KeyThis", "QW" . UI_KeyCodS            )
 	keyModL := ( UI_KeyModN == "Ext" ) ? "| |" : "| |L|R|"
 	_uiControl( "KeyModL", keyModL  )
 	modifer := ( UI_KeyModL == " " ) ? UI_KeyModN : UI_KeyModL . UI_KeyModN
 	vcVK    :=  "vc" . UI_KeyCodV
-	case    :=  UI_KeyType  									; eD TODO: The Switch command only appears with AHK v1.1.31+!
-	mapping :=  ( case == 1 ) ? vcVK . " VKey" 					; [ "VirtualKey", "StateMaps", "Modifier", "Tap-or-Mod", "MoDK" ]
+	mapping :=  ( case == 1 ) ? vcVK . " VKey"  				; [ "VirtualKey", "StateMaps", "Modifier", "Tap-or-Mod", "MoDK" ]
 			:   ( case == 2 ) ? vcVK .                 " 	1   	a   	A   	--  	á   	α   "
 			:   ( case == 3 ) ?              modifer . " Modifier"
 			:   ( case == 4 ) ? vcVK . "/" . modifer . " VKey"
 			:   ( case == 5 ) ? vcVK . "/" . modifer . " 	0   	@ex0	@ex1	@ex2	@ex6	@ex7"
+			:   ( case == 6 ) ? UI_KeyCodV
 			:                   " --"
 	_uiControl( "KeyLine", mapping )
-	if InStr( "12", case ) { 									; These cases don't use the modifier controls
-		GuiControl, Disable , UI_KeyModL
+	if InStr( "126", case ) {   								; These key types don't use the modifier controls
+		GuiControl, Disable , UI_KeyModL 						; Modifier controls
 		GuiControl, Disable , UI_KeyModN
 	} else {
 		GuiControl, Enable  , UI_KeyModL
 		GuiControl, Enable  , UI_KeyModN
-	}
+	} 	; if VK/State/Single
+	if InStr( "36", case ) {
+		GuiControl, Disable , UI_KeyRowV 						; VK row control
+	} else {
+		GuiControl, Enable  , UI_KeyRowV
+	} 	; if Mod/Single
+	if ( case == 3 ) {
+		GuiControl, Disable , UI_KeyCodV 						; VK code control
+	} else {
+		GuiControl, Enable  , UI_KeyCodV
+	} 	; if Single
 Return
 
 UIhlpShow:  													; Help button: Show the KeyMapper and other info Help GUI
-	hlpText :=  ""
+	mapHelp :=  ""
 ;			.   "EPKL Key Mapper help:"
 			. "`nFirstly: This is a complex topic! Please refer to the BigBag web pages and read inside the relevant EPKL files if you wish to understand it better."
 			. "`nDreymaR's Big Bag of Keyboard Tricks is found at: https://dreymar.colemak.org"
@@ -368,24 +381,25 @@ UIhlpShow:  													; Help button: Show the KeyMapper and other info Help G
 			. "`n"
 			. "`n- The Extend key is a layer modifier, usually replacing the Caps key. You can get different Extend layers using modifier combos."
 			. "`n- For instance, hold RAlt then hold Extend then release RAlt while keeping Extend down, to activate the ""Ext2"" NumPad layer."
-			. "`n- Extend can furthermore do something else on tap instead of hold. For Ext-tap, tap Extend – with modifiers if you wish."
+			. "`n- Extend can even do something else on tap instead of hold. For Ext-tap, tap Extend – with modifiers if you wish."
 			. "`n- Combining Ext and Ext-tap, you can have many different layers! This is called a MoDK (Mother-of-DeadKeys) Extend key."
 			. "`n"
 			. "`n- Compose is a sequence recognizer. You type a sequence and hit it. Its traditional use is for accents, but it can do lots of things."
-			. "`n- If a Compose key is set as a CoDeKey, it'll be a dead key too. A CoDeKey composes if it recognises a sequence, or else is a DK. Very powerful!"
+			. "`n- If a Compose key is set as a CoDeKey, it'll be a dead key too. A CoDeKey composes if it recognises a sequence, or else is a DK. Powerful!"
 			. "`n- Dead keys are also very useful on their own. You can have as many as you like, and use them in ingenious ways. See the Deadkeys .ini file."
 			. "`n`n"
 			. "`n•   K E Y   V S   S T A T E   M A P P I N G S"
 			. "`n"
 			. "`n- VirtualKey (VK) or ScanCode (SC) key mapping means that a key press is emulated and as a result whatever is in the system layout for that key is sent."
+			. "`n- Single-entry mappings are a special case: Disabled keys do nothing, while ""System"" mapped keys are mapped to themselves (for Extend to work, etc)."
 			. "`n- State mappings such as [eD] are different: They send characters directly into the Input Stream, so you can send anything regardless of the system layout."
 			. "`n"
-			. "`n- State mappings can be lots of different things, from simple characters via AHK syntax and PowerStrings to advanced dead or Compose/Completion/Repeat keys."
+			. "`n- State mappings can be lots of different things, from simple characters via AHK syntax and PowerStrings to advanced Dead/Repeat/Compose/Completion keys."
 			. "`n- Learn about EPKL Prefix-Entry syntax, Extend, dead keys, Compose and more in the main Readme file. Also in the Compose, DeadKeys, Extend and PowerStrings files."
 			. "`n- The Windows ShiftStates are: [#]  Unshifted  Shifted  Ctrl  AltGr  Shift+AltGr. Usually, ignore the initial CapsBehavior number, and don't map the Ctrl state."
-;	pesText :=  "    This is an overview of EPKL prefix-entry syntax:"
-	pesTabl :=  ""
-			.   "  X=======================================================================================================================X"
+;			    "    This is an overview of EPKL prefix-entry syntax:"
+	pesHelp :=  ""
+			.   "  #=======================================================================================================================#"
 			. "`n  |  EPKL prefix-entry syntax is useable in layout state mappings, Extend, Compose, PowerString and dead key entries.     |"
 			. "`n  |  - There are two equivalent prefixes for each entry type: One easy-to-type ASCII, one from the eD Shift+AltGr layer.  |"
 			. "`n  |      →  |  %  : Send a literal string/ligature by the SendInput {Text} method                                         |"
@@ -394,34 +408,33 @@ UIhlpShow:  													; Help button: Show the KeyMapper and other info Help G
 			. "`n  |      β  |  =  : Send {Blind}‹entry›, keeping the current modifier state                                               |"
 			. "`n  |      †  |  ~  : Send the hex Unicode point U+<entry> (normally but not necessarily 4-digit)                           |"
 			. "`n  |      Ð  |  @  : Send the current layout's dead key named ‹entry› (often a 3-character code)                           |"
-			. "`n  |      ¶  |  &&  : Send the current layout's powerstring named ‹entry›; some are abbreviations like &&Esc, &&Tab…          |" 	; Need to && escape the &amp;
+			. "`n  |      ¶  |  &&  : Send the current layout's powerstring named ‹entry›; some are abbreviations like &&Esc, &&Tab…          |" 	; Need && escape for &amp;
 			. "`n  |  - Any entry may start with «#»: '#' is one or more characters to display on help images for the following mapping.   |"
 			. "`n  |  - Other advanced state mappings:                                                                                     |"
 			. "`n  |      ®® |  ®# : Repeat the previous character. '#' may be a hex number. Nice for avoiding same-finger bigrams.        |"
 			. "`n  |      ©‹name›  : Named Compose key, replacing the last written character sequence with something else.                 |"
 			. "`n  |      ##       : Send the active system layout's Virtual Key code. Good for OS shortcuts, but EPKL can't see it.       |"
-			. "`n  X=======================================================================================================================X"
-	klmText :=  ""
+			. "`n  #=======================================================================================================================#"
+	klmHelp :=  ""
 			.   "•   K E Y   C O D E S   A N D   R E M A P S"
 			. "`n"
 			. "`n- EPKL maps keys using their scan codes. 'QW_' codes denote QWERTY locations, see the table below. Actual SC### scan codes work as well."
 			. "`n- Keys may get moved around by mod _Remaps_ such as ergo mods. When mapping something to a key, map to the unmodded location (the old 'N' key is still QW_N)."
-			. "`n- Example: Standard Colemak has G on the top row, where Colemak-DH has B. To edit the B key in Cmk-DH, still use its QWERTY (and Colemak) position QW_B."
+			. "`n- Example: Standard Colemak has G on the top row (QW_T), where Colemak-DH has B. To edit the B key in Cmk-DH, still use its QWERTY (and Colemak) position QW_B."
 			. "`n"
 			. "`n    This is a table of all KeyLayoutMap codes from the _eD_Remap.ini file, useable both as ""Map from QW"" Scan Codes and ""Map to vc"" Virtual Key codes."
 			. "`n    You can edit the key mapping lines directly to any valid key codes and mappings. The KLM codes to the right, for example, aren't in the dropdown lists."
 	GUI, UI_KEYHLP:New  , ToolWindow , EPKL Key Mapper Help
-	GUI, UI_KEYHLP:Add  , Text,      , % hlpText    			; Help introduction
-;	GUI, UI_KEYHLP:Add  , Text,      , % pesText    			; Syntax-Entry table w/ intro text
+	GUI, UI_KEYHLP:Add  , Text,      , % mapHelp    			; Help introduction
 	GUI, UI_KEYHLP:Font , s10 , Courier New
-	GUI, UI_KEYHLP:Add  , Text,      , % pesTabl . "`n"
+	GUI, UI_KEYHLP:Add  , Text,      , % pesHelp . "`n" 		; Syntax-Entry help table
 	GUI, UI_KEYHLP:Font 										; (Restore the default system font)
-	GUI, UI_KEYHLP:Add  , Text,      , % klmText    			; KLM key code table, generated above
+	GUI, UI_KEYHLP:Add  , Text,      , % klmHelp    			; KLM key code table, generated above
 	GUI, UI_KEYHLP:Font , s10 , Courier New
 	GUI, UI_KEYHLP:Add  , Text,      , % ui.KLMp . "`n" 		; The KLM table is made from the Remap file KLM table
 	GUI, UI_KEYHLP:Font
 	GUI, UI_KEYHLP:Add  , Button, gUIhlpHide Default, &Hide
-	GUI, UI_KEYHLP:Show , x16 y16 								; Show the help window in the screen corner
+	GUI, UI_KEYHLP:Show , x16 y16   							; Show the help window in the screen corner
 Return
 
 UIhlpHide:  													; Remove the Help GUI
@@ -472,7 +485,7 @@ UIrevKey:   													; Revert UI setting(s)
 	           , _uiGetParams( "KeyAll" ) ], "Key" )
 Return
 
-	;; ================================================================================================
+	;;  ============================================================================================================================================================
 	;;  UI functions
 	;
 _uiControl( var, values ) { 									; Update an UI Control with new values and, if applicable, choice
@@ -487,14 +500,14 @@ _uiControl( var, values ) { 									; Update an UI Control with new values and,
 	GUI, UI:Submit, Nohide 										; Needed to update the GUI values (or maybe I could've used |%val% ?)
 }
 
-_uiAddEdt( iTxt, var, opts, editTxt, pos = "" ) { 				; Add an Edit box with text
+_uiAddEdt( iTxt, var, opts, editTxt, pos := "" ) {  			; Add an Edit box with text
 	if ( iTxt ) {
 		GUI, UI:Add, Text,           %pos% , % iTxt
 	}
 	GUI, UI:Add, Edit, vUI_%var% %opts%, % editTxt
 }
 
-_uiAddSel( iTxt, var, opts, listArr, pos = "", typ = "DDL" ) { 	; Add a DropDownList selection box with text and some choices
+_uiAddSel( iTxt, var, opts, listArr, pos := "", typ := "DDL" ) {    	; Add a DropDownList selection box with text and some choices
 	listStr := _uiPipeIt( listArr, 0, 0 )
 	if ( iTxt ) {
 		GUI, UI:Add, Text, %pos%, % "" . iTxt 					; Whitespace pad the text a little?
@@ -518,8 +531,8 @@ _uiGetLayDirs() {   											; Get a list of all Layouts directories, as an ar
 	Return dirs 												; All subdirectories of "Layouts" containing a "Layout.ini" file
 }
 
-_uiPipeIt( listArr, sort = 0, clear = 1 ) { 					; Convert an array to a pipe delimited list, e.g., for DDLs
-	For ix, elem in listArr { 									; eD WIP: Use IfObject to make it more robust?
+_uiPipeIt( listArr, sort := 0, clear := 1 ) {   				; Convert an array to a pipe delimited list, e.g., for DDLs
+	For ix, elem in listArr {   								; eD WIP: Use IfObject to make it more robust?
 		pipe        := ( listStr ) ? "|" : ""
 		listStr     .= pipe . elem
 	}	; end For
@@ -529,7 +542,7 @@ _uiPipeIt( listArr, sort = 0, clear = 1 ) { 					; Convert an array to a pipe de
 	Return listStr
 }
 
-_uiCheckLaySet( dirList, splitUSn, splitMNn = 0, needle = "" ) {
+_uiCheckLaySet( dirList, splitUSn, splitMNn := 0, needle := "" ) {
 	theList     := []
 	For ix, item in dirList {
 		splitUS := StrSplit( item, "_" )
@@ -584,8 +597,8 @@ _uiRevert( parset, sel ) {  									; Revert changes, as above
 	gosub UIsel%sel% 											; Refresh selection (UIselKey etc)
 }
 
-_uiWriteOverride( key_entry, module = "Settings" 				; Write a line to Override. If necessary, make the file first.
-	, section = "pkl", ovrFile = "EPKL_Settings", ovrPath = "" ) {  	; eD WIP: Allow the template to be in root! Separate path from filename, in ovrPath.
+_uiWriteOverride( key_entry, module := "Settings"   			; Write a line to Override. If necessary, make the file first.
+	, section := "pkl", ovrFile := "EPKL_Settings", ovrPath := "" ) {   	; eD WIP: Allow the template to be in root! Separate path from filename, in ovrPath.
 	revert  := ui.Revert
 	a_SC    := "`;"
 	ini     := ".ini"
@@ -689,7 +702,7 @@ in the [%section%] section of %ovrFile%.ini?
 	Return false
 }
 
-_uiMsg_RefreshPKL( purpose = " to use the chosen setting(s)" ) {
+_uiMsg_RefreshPKL( purpose := " to use the chosen setting(s)" ) {
 	ui.Written  := false
 	MsgBox, 0x021, Refresh EPKL?,   		 					; 0x021: 1st button default. Exclamation/Question. OK/Cancel
 (

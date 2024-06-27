@@ -1,4 +1,4 @@
-﻿;; ================================================================================================
+﻿;;  ============================================================================================================================================================
 ;;  EPKL Image module
 ;;  - Displays main and dead key help images by shift state, and Extend layers
 ;;  - Separate background image and Shift/AltGr indicator overlay, configurable in Layout.ini
@@ -8,18 +8,18 @@
 ;;  - Rescaling by hotkey
 ;
 
-pkl_showHelpImage( activate = 0 )
+pkl_showHelpImage( activate := 0 )
 {
 ;;  Parameter values:
-;;  Show    	 0 = display, if activated earlier
-;;  Init    	 1 = activate
-;;  Kill    	-1 = deactivate
-;;  Toggle  	 2 = toggle image
-;;  SuspOn  	 3 = suspend on
-;;  SuspOff 	-3 = suspend off
-;;  Zoom    	 5 = zoom in/out
-;;  Move    	 6 = move between positions
-;;  Opaq    	 7 = opaque/transparent
+;;  Show    	 0 : display, if activated earlier
+;;  Init    	 1 : activate
+;;  Kill    	-1 : deactivate
+;;  Toggle  	 2 : toggle image
+;;  SuspOn  	 3 : suspend on
+;;  SuspOff 	-3 : suspend off
+;;  Zoom    	 5 : zoom in/out
+;;  Move    	 6 : move between positions
+;;  Opaq    	 7 : opaque/transparent
 	
 	static im           := {} 			; Only one static now. But: Not compatible with %var% notation!
 ;	static im.Active    := 0 			; Whether the GUI is currently active; needed for toggling etc
@@ -108,18 +108,18 @@ pkl_showHelpImage( activate = 0 )
 	if ( activate == 1 ) { 												; Activate the help image
 		Menu, Tray, Check, % getPklInfo( "LocStr_ShowHelpImgMenu" ) 	; Tick off the Show Help Image menu item
 		GUI, HI:New, +AlwaysOnTop -Border -Caption +ToolWindow 			; Create a GUI for the help images
-					+LastFound +Owner, 				pklImgWin 			; Owner removes the task bar button?
+					+LastFound +Owner, 				pklHlpImg 			; Owner removes the task bar button?
 		GUI, HI:Margin, 0, 0
 		GUI, HI:Color, % im.BgColor
 		if ( im.Opacity > 0 && im.Opacity < 256 ) {
 			WinSet, Transparent, % im.Opacity
 		} else if ( im.Opacity == -1 ) {
-			WinSet, TransColor, % im.BgColor, pklImgWin  				; eD WIP: This actually works, but if I resize the window it goes away again?
+			WinSet, TransColor, % im.BgColor, pklHlpImg  				; eD WIP: This actually works, but if I resize the window it goes away again?
 		}
 		GUI, HI:Add, Pic, xm +BackgroundTrans vCtrlBgImg ; AltSubmit 	; Make image controls stored in Help##### variables
 		GUI, HI:Add, Pic, xm +BackgroundTrans vCtrlKyImg ; AltSubmit
 		GUI, HI:Add, Pic, xm +BackgroundTrans vCtrlShImg ; AltSubmit
-		GUI, HI:Show, NA, 							pklImgWin
+		GUI, HI:Show, NA, 							pklHlpImg
 		
 		SetTimer, showHelpImage, 170 									; Redraw the help image every # ms (screen refresh takes 16.7 ms @ 60 Hz)
 	} else if ( activate == -1 ) { 										; Deactivate image
@@ -134,18 +134,18 @@ pkl_showHelpImage( activate = 0 )
 	CoordMode, Mouse, Screen 											; Mousing over the image pushes it away
 	MouseGetPos, mouseX, , id
 	WinGetTitle, title, ahk_id %id%
-	if ( title == "pklImgWin" ) {
+	if ( title == "pklHlpImg" ) {
 		max     := im.PosArr.Length()
-		if ( mouseX - imgX < im.Mrg[5] ) { 								; Push +1/right (with wrap)
-			im.PosIx    := ( im.PosIx = max ) ? 1 : ++im.PosIx
+		if ( mouseX - imgX < im.Mrg[5] ) {  							; Push +1/right (with wrap)
+			im.PosIx    := ( im.PosIx == max ) ? 1 : ++im.PosIx
 		} else if ( mouseX - imgX > imgW - im.Mrg[5] ) { 				; Push -1/left   --"--
-			im.PosIx    := ( im.PosIx = 1 ) ? max : --im.PosIx
-		} else { 														; Push up/down, if available
+			im.PosIx    := ( im.PosIx == 1 ) ? max : --im.PosIx
+		} else {    													; Push up/down, if available
 			here        := im.PosArr[ im.PosIx ]
 			move        := ( here > 3 ) ? here - 3 : here + 3
 			movIx       := inArray( im.PosArr, move )
 			im.PosIx    := movIx ? movIx 
-						 : ( im.PosIx = max ) ? 1 : ++im.PosIx 			; If up/down isn't possible, move +1 instead
+						 : ( im.PosIx == max ) ? 1 : ++im.PosIx 		; If up/down isn't possible, move +1 instead
 		}
 		scaleImage  := 1
 	}
@@ -201,13 +201,13 @@ pkl_showHelpImage( activate = 0 )
 	GuiControl, HI:, CtrlBgImg, *w%imgW% *h%imgH% %imgBgPath%
 	GuiControl, HI:, CtrlKyImg, *w%imgW% *h%imgH% %imgPath%
 	GuiControl, HI:, CtrlShImg, *w%imgW% *h%imgH% %imgShPath%
-	GUI, HI: Show, x%imgX% y%imgY% AutoSize NA, 		pklImgWin 		; Use AutoSize NA to avoid stealing focus
+	GUI, HI: Show, x%imgX% y%imgY% AutoSize NA, 		pklHlpImg 		; Use AutoSize NA to avoid stealing focus
 	} else {
 		GUI, HI:Hide
 	}
 }
 
-imgPosDic( pos, def = 0 ) { 											; Get a numerical image position from a T/B+L/M/R one, if needed
+imgPosDic( pos, def := 0 ) {    										; Get a numerical image position from a T/B+L/M/R one, if needed
 	posDic  := { "TL" : 1, "TM" : 2, "TR" : 3
 			   , "BL" : 4, "BM" : 5, "BR" : 6 }
 	if inArray( [ 1, 2, 3, 4, 5, 6 ], pos ) { 							; Image positions may be numeric 1–6 already...
