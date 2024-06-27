@@ -10,10 +10,10 @@ _The default Canary layout (using the Angle mod) on an ANSI keyboard_
 
 The Canary layout
 ------------------
-- This layout was made by layout creators at the **A**lt**K**eyboard**L**ayout Discord, including Apsu and Semi.
-- Its design is based on novel analysis and joint experience.
-- It contains its own [**Curl**(DH)][ErgCrl] mod, similar to the Colemak-DH layout variant.
-- An [**Angle**][ErgAWi] ergo mod is strongly recommended for this layout on row-staggered boards.
+- This layout was made by layout creators at the **A**lt**K**eyboard**L**ayout Discord, 2022-07.
+- Its design is based on novel analysis and joint experience. It's meant as a "next step" from Colemak(-DH).
+- It contains its own [**Curl**(DH)][ErgCrl] mod, in analogy to the Colemak-DH layout variant.
+- An [**Angle**][ErgAWi] ergo mod is recommended for this layout on row-staggered boards.
 - On ortho boards, `G > B > K` and `F > X > M` remaps are recommended in the [Canary ReadMe][CanOrt].
 - For more info, see [the Canary layout repo on GitHub][CanGit].
 <br>
@@ -26,7 +26,7 @@ Here's a quote from Colby regarding the Canary layout [somewhat edited for brevi
 This layout gets special mention in [Getreuer's Alt Keyboard Layout guide][GetAKL]. Have a look!
 <br>
 
-#### The Canary layout on an ANSI board:
+#### The Canary layout on an ANSI board, with an Angle(Q) ergo mod:
 ```
 +-----------------------------+
 | w l y p k   z x o u ; [ ] \ |
@@ -62,14 +62,14 @@ As mentioned, the Canary layout on standard keyboards already contains a [**C**u
 <br>
 
 To create a [**W**ide][ErgAWi] modded variant, there's a hurdle to overcome: The lower-right punctuation keys have been rotated (`SL > CM > PD`) and so we can't just move the <kbd>/</kbd> key from the bottom right into the middle as usual. On ISO keyboards we may place <kbd>.</kbd> to the right of <kbd>A</kbd>, and if desired <kbd>;</kbd> in the place of <kbd>/</kbd> which then goes to the middle as usual. 
-But on ANSI keyboards there is no key to the right of <kbd>'</kbd> as <kbd>\\</kbd> sits less accessibly above <kbd>Enter</kbd> instead. Apsu suggested that we go back to the old placements for these keys; however, be advised that this will bring back the `E ,` same-finger bigram that some dislike in the Colemak layout. That's probably an acceptable compromise if you want a Wide ergo mod.
+But on ANSI keyboards there is no key to the right of <kbd>'</kbd> as <kbd>\\</kbd> sits less accessibly above <kbd>Enter</kbd> instead. Apsu suggested that we go back to the old placements for these keys; however, be advised that this will bring back the `E,` same-finger bigram that some dislike in the Colemak layout. It may be an acceptable compromise if you want a Wide ergo mod.
 <br>
 
 [**S**ym(bol)][ErgSym] mods usually prioritize the common <kbd>'</kbd> (Apostrophe/Quote) and <kbd>-</kbd> (Hyphen/Underscore) keys. 
-Non-Wide, you may use the same Sym mod as Colemak and other layouts that don't change symbol key positions do. With the Wide mods described above, the result is also quite similar to the Colemak-CAWS mod battery, with the possible exception of the keys mentioned (`SL CM PD SC`).
+Non-Wide, you may use the same Sym mod as Colemak and other layouts that don't change symbol key positions do. With the Wide mods described above, the result is also quite similar to the Colemak-CAWS mod battery, with the possible exception of the keys mentioned (`/ , . ;` alias `SL CM PD SC`).
 <br>
 
-#### Canary (C)AWS-ISO proposal, moving the period key:
+#### Canary (C)AWS-ISO proposal, moving the period key up:
 ```
 +----------------------------+
 | 1 2 3 4 5 6 \ 7 8 9 0 =    |

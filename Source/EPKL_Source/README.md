@@ -2,8 +2,8 @@
 ========================================================
 <br>
 
-- Version:  1.4.1
-- Compiled: 2023-02 from GitHub/DreymaR/BigBagKbdTrixPKL
+- Version:  1.4.1 End-Of-Life
+- Compiled: 2024-03 from GitHub/DreymaR/BigBagKbdTrixPKL
 - Compiler: AutoHotKey v1.1.27.07 Unicode 32 bit
 <br>
 
@@ -29,6 +29,7 @@ For a detailed version history, look further down.
 * EPKL v1.3.1: Compose/Completion developments. Folder/file restructuring. Cmk Heb/Epo/BrPt/Nl variants, Ortho kbd types, Boo layout, Dvk-Sym.
 * EPKL v1.4.0: Better Send for key mapping. ScanCode key mapping. Dual-function CoDeKey (Compose+Dead key).
 * EPKL v1.4.1: Timerless EPKL! State-2-VK mapping types. SwiSh & FliCK modifiers. Layout_Override.
+* EPKL v1.4.2: Layout/Settings enhancements. Ext-tap rework.
 ```
 <br>
 
@@ -409,7 +410,7 @@ VERSION HISTORY:
 	- The img_HideStates setting can hide the `ext` layer image too, and even DK shift states specified as `dk#`; # is a shift state (0,1,6,7).
 	- The BaseLayout setting in Layout.ini can now take a `..\` syntax.
 	- Added ANS-Orth/ISO-Orth Colemak-eD. Images are still row-staggered, but this should clarify which ergo mods are for which board types.
-		- The bracket-lift Sym mod (Sym-Br) looks better on ortho boards than the standard (Sym-LBr). Images were made for both mod variants.
+		- The bracket-lift Sym mod (SymQM-Br) looks better on ortho boards than the standard (SymQM-LB). Images were made for both mod variants.
 	- Suspend by layout Locale ID. Should make EPKL work better for users of IMEs such as Korean, as they may conflict with non-QWERTY layouts.
 		- The suspendingLIDs setting uses 4-xdigit LID codes as found in the About... menu. Use the Locale ID, not the Language one.
 	- An `--` entry allows disabling EPKL hotkeys in the `EPKL_Settings_Override` file. Earlier, you'd have to use an unused key like `Sleep`.
@@ -538,26 +539,34 @@ VERSION HISTORY:
 		- KeyUp was put on a 1 ms timer like KeyDn had, to ensure it doesn't sneak past a last KeyDown of a repeating key.
 		- Eventually though, the whole timer system was removed to make EPKL timerless.
 	- Fixed: NumPadDot was state mapped as an explicit dot/comma key. This behavior is unintuitive, so it's been relegated to `EPKL_Layouts_Override_Example`.
-* EPKL v1.4.2: WIP
+* EPKL v1.4.2: Layout/Settings enhancements. Ext-tap rework.
+	- Reworked Settings GUI globals. Now these are initialized at startup, hopefully making GUI creation a bit faster.
+		- Also made an array of layout folders: Subfolders under "Layouts" contaning a "Layout.ini" file and fulfilling certain naming criteria.
+		- This way, no layout folder read nor FileExist checks are necessary at GUI creation/selection time.
 	- Instead of an array of Compose sequence lengths, now there's just `bufSize` for max length. Sequences are processed from longest to shortest.
 	- More ways to reset the Composer queue. Backspace pops the last key as before. Del/Enter/Esc Ctrl+Back and AHK syntax (α prefix) now delete the queue.
 		- This fixes a problem with using powerstrings for Delete Word, as they would leave undesired characters in the lastKeys queue.
 	- ToM mappings required a VK code before the slash but an AHK modifier name after. Now, you can use any modifier alias (VK or KLM name).
 		- `[LR]?(SHIFT|CONTROL|MENU|WIN)`, `vc(SHF|CTL|ALT|WIN)` and `vc[LR](SH|CT|AL|WI) should all work now.
 		- https://github.com/DreymaR/BigBagKbdTrixPKL/discussions/64
-	- Reworked Settings GUI globals. Now these are initialized at startup, hopefully making GUI creation a bit faster.
-		- Also made an array of layout folders: Subfolders under "Layouts" contaning a "Layout.ini" file and fulfilling certain naming criteria.
-		- This way, no layout folder read nor FileExist checks are necessary at GUI creation/selection time.
 	- A template for implementing new layouts, under `Layouts\_Template`. See its `README` file for more info.
-	- Using the NewLayout template framework, a few more modern layouts were added. Semimak-JQ and Canary were already in place.
+	- Using the NewLayout template framework, a few more modern layouts were added; Semimak-JQ and Canary were already in place.
 		- The APT(v3) layout by Apsu, with Angle, Wide and Sym ergo mods.
 		- The Graphite layout by Richard Davison alias 'stronglytyped'. Also a keymap-friendly Graphite-HB variant (no shift state changes).
 		- The Sturdy layout by Oxey, with an Angle ergo mod.
 		- Wide and Sym ergo mods are WIP for both Graphite and Sturdy, for now.
-	- The Sym-Mn (only the MN loop) partial mod is now a named Remap. Fits layouts with no symbol in the QWERTY `P` position.
+	- The SymMn (only the MN loop) partial mod is now a named Remap. Fits layouts with no symbol in the QWERTY `P` position.
 		- This includes Semimak, APTv3 and several other alternative keyboard layouts.
 	- Fixed: Several Layout Selector GUI bugs.
 		- Fixed a Layout Selector bug for Cmk (which uses a subdir), causing the loss of a backslash in the layout path.
 			- It was broken in commit "Reworked Settings GUI initalization " (12d964a) 2023-07-13, in the file `pkl_gui_settings.ahk`.
 		- Fixed a Layout Selector bug that would allow an invalid KbdType to show up if another LayType had that KbdType.
 		- Any LayDir not starting with the LayMain's 3LA (usually the 3 first letters) is not shown in the Layout Selector anymore.
+	- Fixed: HIG only made "state0.png" (really the last state) plus state0.svg.png (actual state0) instead of the state images it should.
+		- InkScape v1.3 (2023-07) had a bug affecting batch export. Should be fixed in later versions. The HIG works w/ the standalone v1.2.1 install.
+	- Reworked Ext-tap DK layers. The URL and BBC tags weren't universally useful, somewhat unintuitive and better solved as sequences anyway.
+		- Instead, added Ctrl+W/S/etc shortcuts, and moved some old shortcuts around. Still uncertain about symbols for these layers, due to ToM timing.
+	- Reworked Single-Entry key mapping. In addition to `vk|vkey` and `sc|skey|system`, `--|disabled` disables a key and `<>|unmapped` leaves it alone.
+		- The main purpose of `Unmapped` is to allow an Override file such as `Layout_Override.ini` to instruct EPKL to leave a key untouched.
+		- Added a `Single-Entry` mapping type in the KeyMapper, with these four "Map to..." flavors.
+		- Changed the Special Keys CapsLock entry in the Settings GUI to `Unmapped`. This makes reclaiming the CapsLock key (at the user's loss) easier.
